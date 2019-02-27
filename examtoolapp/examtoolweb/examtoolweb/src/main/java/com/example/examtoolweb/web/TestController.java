@@ -1,0 +1,74 @@
+package com.example.examtoolweb.web;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.examtoolweb.domain.Test;
+import com.example.examtoolweb.service.MapValidationErrorService;
+import com.example.examtoolweb.service.TestService;
+
+/**
+ * controller manages the flow of the exam tool web application cross origin is
+ * used to mark the annotated method or type as permitting cross origin requests
+ * by clients
+ * 
+ * @author aditi.jain
+ *
+ */
+
+@CrossOrigin
+@RestController
+@RequestMapping("/web/tests")
+public class TestController {
+	@Autowired
+	private TestService testService;
+	@Autowired 
+	private MapValidationErrorService mapValidationErrorService;
+
+
+	@PostMapping("")
+	public ResponseEntity<?> createTest(@Valid @RequestBody Test test, BindingResult result) {
+		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationError(result);
+        if(errorMap!=null) return errorMap;
+        testService.saveOrUpdate(test);
+        return new ResponseEntity<Test>(test, HttpStatus.CREATED);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteTest(@PathVariable Long id) {
+		testService.delete(id);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@PutMapping("")
+	public ResponseEntity<?> updateTest(@Valid @RequestBody Test test, BindingResult result) {
+		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationError(result);
+        if(errorMap!=null) return errorMap;
+        testService.saveOrUpdate(test);
+        return new ResponseEntity<Test>(test, HttpStatus.CREATED);
+	}
+
+	@GetMapping("")
+	public ResponseEntity<List<Test>> getAllTests() {
+		List<Test> test = testService.getAllTests();
+		return new ResponseEntity<List<Test>>(test, HttpStatus.OK);
+	}
+}

@@ -1,0 +1,6 @@
+INDEX VERSION 1.4+D:\workspace\casestudyapp\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+494505343.index
+3910265123.index
+4021574700.index
+2070541253.index
+3590713807.index
